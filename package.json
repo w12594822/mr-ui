@@ -33,12 +33,7 @@
   "bugs": {
     "url": "https://github.com/mapbox/mr-ui/issues"
   },
-  "homepage": "https://github.com/mapbox/mr-ui#readme",
-  "peerDependencies": {
-    "prop-types": "^15.5.0",
-    "react": "^15.5.0 || ^16.0.0",
-    "react-dom": "^15.5.0 || ^16.0.0"
-  },
+  "homepage": "https://github.com/mapbox/mr-ui#readme", 
   "dependencies": {
     "@mapbox/query-selector-contains-node": "^1.0.0",
     "classnames": "^2.2.6",
