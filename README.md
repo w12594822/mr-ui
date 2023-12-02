@@ -2,7 +2,7 @@
 
 ![mr-ui logo](https://github.com/mapbox/mr-ui/raw/main/logo/mr-ui.gif)
 
-[![Build Status](https://app.travis-ci.com/mapbox/mr-ui.svg?branch=main)](https://app.travis-ci.com/mapbox/mr-ui)
+[![Build Status](https://travis-ci.com/mapbox/mr-ui.svg?token=FB2dZNVWaGo68KZnwz9M&branch=main)](https://travis-ci.com/mapbox/mr-ui)
 
 Pronounced `'mis-tər yü-'ī`. **M**apbox **R**eact **UI** components.
 
@@ -42,8 +42,11 @@ See [the utils documentation](./src/components/utils/README.md).
 Here are some commands you'll probably want to use:
 
 ```bash
-# Start the documentation site.
+# Start the test-cases app.
 npm start
+
+# Start the documentation site.
+npm run start-docs
 
 # Start Jest's CLI in watch mode.
 npx jest --watchAll

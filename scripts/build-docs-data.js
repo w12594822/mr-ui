@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+'use strict';
 
 require('hard-rejection/register');
 const _ = require('lodash');
@@ -19,12 +20,7 @@ loadLanguages(['jsx']);
 const dataDir = path.resolve(__dirname, '../src/docs/data');
 const srcDir = path.resolve(__dirname, '../src/components');
 const dataFilename = path.resolve(dataDir, 'components.js');
-const excludeSourceDirs = new Set([
-  'page-loading-indicator',
-  'utils',
-  'typings.ts',
-  '.DS_Store'
-]);
+const excludeSourceDirs = new Set(['page-loading-indicator', 'utils']);
 
 function processExampleFile(filename) {
   return pify(fs.readFile)(filename, 'utf8').then((code) => {
@@ -44,6 +40,7 @@ function processExampleFile(filename) {
     const renderedDescription = encodeJsx(
       jsxtremeMarkdown.toJsx(descriptionMatch[1].trim())
     );
+
     return `{
       exampleModule: require('${filename}'),
       code: \`${encodeJsx(highlightedCode)}\`,
@@ -54,11 +51,9 @@ function processExampleFile(filename) {
 
 function getExamples(componentDirectory) {
   const examplesDirectory = path.join(componentDirectory, 'examples');
-  return globby(path.join(examplesDirectory, '*.(js|tsx)')).then(
-    (filenames) => {
-      return Promise.all(filenames.sort().map(processExampleFile));
-    }
-  );
+  return globby(path.join(examplesDirectory, '*.js')).then((filenames) => {
+    return Promise.all(filenames.sort().map(processExampleFile));
+  });
 }
 
 function processProps(props) {
@@ -86,12 +81,10 @@ function processProps(props) {
 
 function processComponent(hyphenName) {
   const componentDir = path.join(srcDir, hyphenName);
+  const srcFilename = path.join(componentDir, `${hyphenName}.js`);
+
   return Promise.all([
-    globby(path.join(componentDir, `${hyphenName}.(js|tsx)`)).then(
-      ([srcFilename]) => {
-        return pify(fs.readFile)(srcFilename, 'utf8');
-      }
-    ),
+    pify(fs.readFile)(srcFilename, 'utf8'),
     getExamples(componentDir)
   ]).then(([code, examples]) => {
     const parsedData = reactDocgen.parse(code);
@@ -121,8 +114,8 @@ function generateDocsData() {
     .then((componentArrayString) => {
       const code = `
         'use strict';
-        import React from 'react';
-        export default ${componentArrayString}`;
+        const React = require('react');
+        module.exports = ${componentArrayString}`;
       return pify(fs.writeFile)(
         dataFilename,
         prettier.format(code, { parser: 'babel' })
